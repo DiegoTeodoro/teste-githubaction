@@ -21,10 +21,16 @@ jobs:
         id: extract_values
         run: |
           total=0
-          grep -oP '(?<=Valor[0-9]: )\d+,\d{2}' index.html | while read value; do
-            # Remove comma and convert to a number with a decimal point
+          # Extract values, convert commas to dots for floating point numbers
+          for value in $(grep -oP '(?<=Valor[0-9]: )\d+,\d{2}' index.html); do
+            # Replace comma with dot for decimal conversion
             value_number=$(echo $value | sed 's/,/./')
+            # Sum the values using bc (basic calculator)
             total=$(echo "$total + $value_number" | bc)
           done
           echo "Total Values Sum: $total"
+          # Export the total value to the environment variable
           echo "Total_valores=$total" >> $GITHUB_ENV
+
+      - name: Display Total Value
+        run: echo "The total of all values is: ${{ env.Total_valores }}"
