@@ -1,0 +1,25 @@
+name: Extract HTML Values
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  extract-values:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Read HTML File
+        id: read_html
+        run: cat index.html
+
+      - name: Extract Values from HTML
+        id: extract_values
+        run: |
+          grep -oP '(?<=Valor[0-9]: )\d+,\d{2}' index.html | while read value; do
+            echo "Found value: $value"
+          done
