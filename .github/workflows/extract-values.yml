@@ -1,4 +1,4 @@
-name: Extract HTML Values
+name: Extract and Sum HTML Values
 
 on:
   push:
@@ -17,9 +17,14 @@ jobs:
         id: read_html
         run: cat index.html
 
-      - name: Extract Values from HTML
+      - name: Extract and Sum Values from HTML
         id: extract_values
         run: |
+          total=0
           grep -oP '(?<=Valor[0-9]: )\d+,\d{2}' index.html | while read value; do
-            echo "Found value: $value"
+            # Remove comma and convert to a number with a decimal point
+            value_number=$(echo $value | sed 's/,/./')
+            total=$(echo "$total + $value_number" | bc)
           done
+          echo "Total Values Sum: $total"
+          echo "Total_valores=$total" >> $GITHUB_ENV
