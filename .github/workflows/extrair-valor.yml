@@ -15,13 +15,12 @@ jobs:
 
       - name: Read HTML File
         id: read_html
-        run: cat actions/index2.html
+        run: cat index2.html
 
       - name: Extract Values from HTML
         id: extract_values
         run: |
           # Extract values from <p> tags that contain "Valor total:"
-          grep -oP '(?<=Valor total: )\d+,\d{2}' actions/index2.html | while read value; do
+          grep -oP '(?<=Valor total: )\d+,\d{2}' index2.html | while read value; do
             echo "Found value: $value"
           done
-
