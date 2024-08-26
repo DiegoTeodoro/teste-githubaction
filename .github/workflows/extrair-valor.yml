@@ -1,0 +1,27 @@
+name: Extract HTML Values
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  extract-values:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Read HTML File
+        id: read_html
+        run: cat actions/index2.html
+
+      - name: Extract Values from HTML
+        id: extract_values
+        run: |
+          # Extract values from <p> tags that contain "Valor total:"
+          grep -oP '(?<=Valor total: )\d+,\d{2}' actions/index2.html | while read value; do
+            echo "Found value: $value"
+          done
+
